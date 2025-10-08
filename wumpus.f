@@ -229,10 +229,20 @@ ALIGN  \ Align to next slot boundary
   ;
 
 \ Accept a one-character answer from the player
+: input-character ( -- answer )
+    BEGIN
+      CR ." > "
+      PROMPT-ANSWER 1 ACCEPT
+      0 > DUP INVERT IF
+        CR ." Huh? "
+      THEN
+    UNTIL \ Try again if no character entered
+  ;
+
+\ Input one lowercase ASCII character from the player
 : input-ascii-lowercase ( -- answer )
-    CR ." > "
-    PROMPT-ANSWER 1 ACCEPT DROP \ Forget count
-    \ ASCII alpha to lowercase; others don't care
+    input-character
+    \ Convert ASCII alpha to lowercase; others don't care
     PROMPT-ANSWER C@ 32 OR PROMPT-ANSWER C!
     PROMPT-ANSWER C@
   ;
