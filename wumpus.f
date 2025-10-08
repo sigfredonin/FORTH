@@ -337,7 +337,7 @@ ALIGN  \ Align to next slot boundary
   ;
 
 \ Prompt for the arrow's path when shooting a crooked arrow
-: prompt-arrow-path ( -- )
+: prompt-arrow-path ( -- ; sets arrow path length and rooms )
     prompt-arrow-path-length
     DUP ARROW-PATH-LENGTH C! 0 DO
       I prompt-arrow-path-room
@@ -395,35 +395,6 @@ ALIGN  \ Align to next slot boundary
         CR . s" unknown game result " exception throw
       THEN
     THEN
-  ;
-
-\ List any hazards in a room
-: hazards-in-room ( room-number -- )
-    DUP ?cave-room-has-wumpus IF
-     CR ." I smell a Wumpus!"
-    THEN
-    DUP ?cave-room-has-pit IF
-     CR ." I feel a draft!"
-    THEN
-    DUP ?cave-room-has-bats IF
-     CR ." I hear a rustling sound!"
-    THEN
-    DROP \ Forget room number
-  ;
-
-\ Warn of any hazards in the neighboring rooms
-: warn-of-hazards ( room-number -- )
-    cave-room-neighbors
-    hazards-in-room
-    hazards-in-room
-    hazards-in-room
-  ;
-
-\ Describe player's location
-: describe-location ( room-number -- )
-    CR ." You are in room " DUP .
-    CR ." Tunnels lead to rooms " DUP list-neighbors
-    warn-of-hazards
   ;
 
 \ Get a new room for the player
@@ -527,6 +498,36 @@ ALIGN  \ Align to next slot boundary
 \ Game play
 \
 
+\ List any hazards in a room
+: hazards-in-room ( room-number -- )
+    DUP ?cave-room-has-wumpus IF
+     CR ." I smell a Wumpus!"
+    THEN
+    DUP ?cave-room-has-pit IF
+     CR ." I feel a draft!"
+    THEN
+    DUP ?cave-room-has-bats IF
+     CR ." I hear a rustling sound!"
+    THEN
+    DROP \ Forget room number
+  ;
+
+\ Warn of any hazards in the neighboring rooms
+: warn-of-hazards ( room-number -- )
+    cave-room-neighbors
+    hazards-in-room
+    hazards-in-room
+    hazards-in-room
+  ;
+
+\ Describe the Hunter's location
+: describe-hunter-location ( -- )
+    HUNTER C@
+    CR ." You are in room " DUP .
+    CR ." Tunnels lead to rooms " DUP list-neighbors
+    warn-of-hazards
+  ;
+
 \ The Wumpus eats the Hunter if in the same room
 : wumpus-ate-hunter? ( -- ; may set player state to LOST )
     HUNTER C@ ?cave-room-has-wumpus IF
@@ -610,24 +611,9 @@ ALIGN  \ Align to next slot boundary
     THEN
   ;
 
-\ Did the Hunter get snatched by a super bat?
-: ?hunter-bat-snatched ( -- flag )
-    HUNTER C@ ?cave-room-has-bats
-  ;
-
-\ Did the Hunter fall in a bottomless pit?
-: ?hunter-fell-in-pit ( -- flag )
-    HUNTER C@ ?cave-room-has-pit
-  ;
-
-\ Did the Hunter disturb the Wumpus?
-: ?hunter-disturbed-wumpus ( -- flag )
-    HUNTER C@ ?cave-room-has-wumpus
-  ;
-
 \ Hunter went into a room with super bats?
 : entered-room-with-bats? ( -- flag )
-    ?hunter-bat-snatched DUP IF
+    HUNTER C@ ?cave-room-has-bats DUP IF
       CR ." Oh oh oh! A bat's got you! Oh ohhh ... "
       COUNT-ROOMS random 1+ DUP HUNTER C!
       CR ." You are now in room " .
@@ -637,7 +623,7 @@ ALIGN  \ Align to next slot boundary
 
 \ Hunter went into a room with a bottomless pit?
 : entered-room-with-pit? ( -- ; may set player state to LOST )
-    ?hunter-fell-in-pit IF
+    HUNTER C@ ?cave-room-has-pit IF
       CR ." Aaaaggghhh! You fell in a pit! You lose! "
       LOST PLAYER C!
     THEN
@@ -645,14 +631,9 @@ ALIGN  \ Align to next slot boundary
 
 \ Hunter went into a room with the Wumpus?
 : entered-room-with-wumpus? ( -- ; may set player state to LOST )
-    ?hunter-disturbed-wumpus IF
+    HUNTER C@ ?cave-room-has-wumpus IF
       move-wumpus \ may set player state to LOST
     THEN
-  ;
-
-\ Describe the Hunter's location
-: describe-hunter-location ( -- )
-    HUNTER C@ describe-location
   ;
 
 \ Move the Hunter to a new room
@@ -704,7 +685,7 @@ ALIGN  \ Align to next slot boundary
   ;
 
 \ Reset the state for a new game
-: init ( SAME-ROOMS | NEW-ROOMS -- )
+: new-game ( SAME-ROOMS | NEW-ROOMS -- )
     NEW-ROOMS = IF
       create-new-room-assignments
     THEN
@@ -719,7 +700,7 @@ ALIGN  \ Align to next slot boundary
     show-instructions-if-wanted
     NEW-ROOMS
     BEGIN
-      init                      \ SAME-ROOMS | NEW-ROOMS --
+      new-game                  \ SAME-ROOMS | NEW-ROOMS --
       describe-hunter-location  \ --
       play                      \ -- WON | LOST
       show-result               \ WON | LOST --
