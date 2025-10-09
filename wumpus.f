@@ -69,6 +69,7 @@ CREATE ROOM-NUMBERS COUNT-ROOMS CHARS ALLOT
 CREATE PROMPT-STRING 2 CELLS ALLOT
 
 \ An 8-character buffer for prompt answers
+8 CONSTANT MAX-ANSWER-LENGTH
 CREATE PROMPT-ANSWER 8 CHARS ALLOT
 
 \ Responses to a yes-no question
@@ -228,20 +229,20 @@ ALIGN  \ Align to next slot boundary
     LOOP
   ;
 
-\ Accept a one-character answer from the player
-: input-character ( -- answer )
+\ Accept an answer from the player
+: input-answer ( max-length -- length ; characters in PROMPT-ANSWER)
     BEGIN
       CR ." > "
-      PROMPT-ANSWER 1 ACCEPT
-      0 > DUP INVERT IF
+      PROMPT-ANSWER SWAP MAX-ANSWER-LENGTH MIN ACCEPT
+      DUP 0 > DUP INVERT IF
         CR ." Huh? "
       THEN
-    UNTIL \ Try again if no character entered
+    UNTIL \ Try again if no characters entered
   ;
 
 \ Input one lowercase ASCII character from the player
 : input-ascii-lowercase ( -- answer )
-    input-character
+    1 input-answer DROP \ Forget length
     \ Convert ASCII alpha to lowercase; others don't care
     PROMPT-ANSWER C@ 32 OR PROMPT-ANSWER C!
     PROMPT-ANSWER C@
@@ -250,8 +251,7 @@ ALIGN  \ Align to next slot boundary
 \ Accept a numeric answer from the player
 : input-number ( -- number )
     BEGIN
-      CR ." > "
-      PROMPT-ANSWER DUP 8 ACCEPT \ -- answer-address length
+      2 input-answer PROMPT-ANSWER SWAP \ -- answer-address length
       \ try to convert the answer into a number
       S>UNUMBER? SWAP DROP \ Forget high-order part
       DUP INVERT IF
@@ -324,8 +324,8 @@ ALIGN  \ Align to next slot boundary
 : prompt-arrow-path-room ( index -- room )
     BEGIN
       CR ." Enter room " DUP 1+ .
-      input-number OVER \ -- index room index
-      arrow-path-backtrack-room \ -- index room invalid-room
+      input-number \ -- index room
+      OVER arrow-path-backtrack-room \ -- index room invalid-room
       OVER = DUP IF \ -- index room flag
         CR ." Huh, arrows aren't that crooked! "
         SWAP DROP \ Forget chosen room

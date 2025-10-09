@@ -2087,3 +2087,118 @@ Congratulations! You got the Wumpus! But next time, hee, hee, hee!
 Play again (y|n)?
 > n
 Bye  ok
+-------------------------------------------------------------------------------
+Hunt-the-Wumpus v 1.00
+Wednesday, October 8, 2025, 5:14:02 PM Pacific Standard Time
+-------------------------------------------------------------------------------
+Gforth 0.7.0, Copyright (C) 1995-2008 Free Software Foundation, Inc.
+Gforth comes with ABSOLUTELY NO WARRANTY; for details type `license'
+Type `bye' to exit
+Hunt-the-Wumpus
+:1: Undefined word
+>>>Hunt-the-Wumpus<<<
+Backtrace:
+$7FA94EB4 throw
+$7FAA1628 no.extensions
+$7FA9502C interpreter-notfound1
+include D:\FORTH\wumpus.f  ok
+Hunt-the-Wumpus
+ ----  ----  Hunt the Wumpus  ----  ----
+ - Version 1.00 - FORTH
+ ----  ----  ---------------  ----  ----
+Show instructions (y|n)?
+> n
+You are in room 16
+Tunnels lead to rooms 17 15 20
+What do you want to do (m=move, s=shoot, w=where am I?)?
+> s
+How many rooms should the arrow traverse (1..5)?
+> 55
+Huh?
+How many rooms should the arrow traverse (1..5)?
+> 5
+Enter room 1
+> 17
+Enter room 2
+> 18
+Enter room 3
+> 19
+Enter room 4
+> 20
+Enter room 5
+> 13
+ARROW PATH - 5 : 17 18 19 20 13
+16 --> 17 --> 18 --> 19 --> 20 --> 13
+You missed!
+Uh oh! You disturbed the Wumpus!
+Phew! The Wumpus didn't get you.
+What do you want to do (m=move, s=shoot, w=where am I?)?
+> w
+You are in room 16
+Tunnels lead to rooms 17 15 20
+What do you want to do (m=move, s=shoot, w=where am I?)?
+> m
+Where do you want to go?
+> 15
+You are in room 15
+Tunnels lead to rooms 6 16 14
+What do you want to do (m=move, s=shoot, w=where am I?)?
+> m
+Where do you want to go?
+> 6
+You are in room 6
+Tunnels lead to rooms 7 5 15
+I feel a draft!
+I hear a rustling sound!
+What do you want to do (m=move, s=shoot, w=where am I?)?
+> m
+Where do you want to go?
+> 5
+Oh oh oh! A bat's got you! Oh ohhh ...
+You are now in room 3
+You are in room 3
+Tunnels lead to rooms 4 12 2
+I smell a Wumpus!
+What do you want to do (m=move, s=shoot, w=where am I?)?
+> s
+How many rooms should the arrow traverse (1..5)?
+> 5
+Enter room 1
+> 4
+Enter room 2
+> 5
+Enter room 3
+> 6
+Enter room 4
+> 5
+Huh, arrows aren't that crooked!
+Enter room 4
+> 7
+Enter room 5
+> 8
+ARROW PATH - 5 : 4 5 6 7 8
+3 --> 4 --> 5 --> 6 --> 7 --> 8
+You missed!
+Uh oh! You disturbed the Wumpus!
+Phew! The Wumpus didn't get you.
+What do you want to do (m=move, s=shoot, w=where am I?)?
+> s
+How many rooms should the arrow traverse (1..5)?
+> 5
+Enter room 1
+> 4
+Enter room 2
+> 5
+Enter room 3
+> 1
+Enter room 4
+> 2
+Enter room 5
+> 10
+ARROW PATH - 5 : 4 5 1 2 10
+3 --> 4 --> 5 --> 1 --> 2 --> 10
+Aha! You got the Wumpus!
+Congratulations! You got the Wumpus! But next time, hee, hee, hee!
+Play again (y|n)?
+> n
+Bye  ok
