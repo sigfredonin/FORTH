@@ -4,8 +4,15 @@
     ." Version 1.00 - FORTH "
   ;
 
+[DEFINED] UTIME [IF] ( -- Dusec )
+   : MS@ UTIME DROP ;  \ gforth
+[ELSE]
+[DEFINED] counter [IF]
+   : MS@ counter ;     \ SwiftForth
+[THEN] [THEN]
+
 include random.fs \ defines random ( n -- 0..n-1 )
-UTIME DROP SEED ! \ Initialize random seed to low order word of system epoch time
+MS@ SEED !        \ Initialize random seed to low order word of system epoch time
 
 \
 \ The cave: 20 rooms, each connected to 3 others, as a dodecahedron
@@ -43,6 +50,7 @@ CREATE BATS   2 CHARS ALLOT \ Rooms with bats
 CREATE ARROWS 1 CHARS ALLOT \ Number of crooked arrows left
 CREATE PLAYER 1 CHARS ALLOT \ Player's state: IN-PLAY, WON, LOST
 
+\ Keep track of whether bats snatched the Hunter
 CREATE BATS-MOVED-HUNTER 1 CELLS ALLOT \ TRUE if bats moved player
 
 \ Arrow path
@@ -399,7 +407,7 @@ ALIGN  \ Align to next slot boundary
         CR ." Condolences, maybe better luck next time."
         DROP
       ELSE
-        CR . s" unknown game result " exception throw
+        CR . ." unknown game result."
       THEN
     THEN
   ;
@@ -675,7 +683,7 @@ ALIGN  \ Align to next slot boundary
         \ - undocumented -
         GAME-STATE   OF show-game-state          ENDOF
         CAVE-ROOMS   OF show-cave-rooms          ENDOF
-        CR . s" unexpected command " exception throw
+        CR . ." unexpected command."
       ENDCASE
     REPEAT
     PLAYER C@
