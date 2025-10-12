@@ -2332,6 +2332,8 @@ Bye  ok
   Define MS@ for seeding random: UTIME DROP in Gforth, counter in Swiftforth
   Remove instances of "exception throw" in show-results and play
 -------------------------------------------------------------------------------
+SwiftForth i386-Win32 3.12.0 21-Sep-2023
+INCLUDE "D:\FORTH\wumpus.f"  ok
 Hunt-the-Wumpus
  ----  ----  Hunt the Wumpus  ----  ----
  - Version 1.00 - FORTH
