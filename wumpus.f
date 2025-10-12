@@ -231,13 +231,16 @@ ALIGN  \ Align to next slot boundary
 
 \ Accept an answer from the player
 : input-answer ( max-length -- length ; characters in PROMPT-ANSWER)
+    MAX-ANSWER-LENGTH MIN \ Can't input more than buffer length
     BEGIN
       CR ." > "
-      PROMPT-ANSWER SWAP MAX-ANSWER-LENGTH MIN ACCEPT
+      DUP PROMPT-ANSWER SWAP ACCEPT
       DUP 0 > DUP INVERT IF
         CR ." Huh? "
+        SWAP DROP \ Forget zero length
       THEN
     UNTIL \ Try again if no characters entered
+    SWAP DROP \ Forget max input length
   ;
 
 \ Input one lowercase ASCII character from the player
@@ -253,10 +256,14 @@ ALIGN  \ Align to next slot boundary
     BEGIN
       2 input-answer PROMPT-ANSWER SWAP \ -- answer-address length
       \ try to convert the answer into a number
-      S>UNUMBER? SWAP DROP \ Forget high-order part
-      DUP INVERT IF
+      0 0 2SWAP >NUMBER \ -- 0 0 remnant-address remnant-length
+      0= DUP INVERT IF \ -- n 0 remnant-address flag
         CR ." That is not a number. "
-        SWAP DROP \ Forget non-numeric answer
+        2SWAP 2DROP \ Forget non-numeric answer
+        SWAP DROP   \ Forget remnant-address, leaving FALSE
+      ELSE \ Entire answer was converted to a number
+        SWAP DROP   \ Forget remnant-address
+        SWAP DROP   \ Forget high-order zero of number in 0..99
       THEN
     UNTIL \ Try again if answer was invalid
   ;
