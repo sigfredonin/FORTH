@@ -12,7 +12,7 @@
 [THEN] [THEN]
 
 include random.fs \ defines random ( n -- 0..n-1 )
-MS@ SEED !        \ Initialize random seed to low order word of system epoch time
+MS@ SEED !        \ Initialize random seed to a value that changes with time
 
 \
 \ The cave: 20 rooms, each connected to 3 others, as a dodecahedron
@@ -78,7 +78,7 @@ CREATE PROMPT-STRING 2 CELLS ALLOT
 
 \ An 8-character buffer for prompt answers
 8 CONSTANT MAX-ANSWER-LENGTH
-CREATE PROMPT-ANSWER 8 CHARS ALLOT
+CREATE PROMPT-ANSWER MAX-ANSWER-LENGTH CHARS ALLOT
 
 \ Responses to a yes-no question
 CHAR y CONSTANT YES
@@ -264,10 +264,10 @@ ALIGN  \ Align to next slot boundary
     BEGIN
       2 input-answer PROMPT-ANSWER SWAP \ -- answer-address length
       \ try to convert the answer into a number
-      0 0 2SWAP >NUMBER \ -- 0 0 remnant-address remnant-length
-      0= DUP INVERT IF \ -- n 0 remnant-address flag
+      0 0 2SWAP >NUMBER \ -- n 0 remnant-address remnant-length
+      0= DUP INVERT IF  \ -- n 0 remnant-address flag
         CR ." That is not a number. "
-        2SWAP 2DROP \ Forget non-numeric answer
+        2SWAP 2DROP \ Forget invalid answer
         SWAP DROP   \ Forget remnant-address, leaving FALSE
       ELSE \ Entire answer was converted to a number
         SWAP DROP   \ Forget remnant-address
