@@ -238,7 +238,7 @@ ALIGN  \ Align to next slot boundary
   ;
 
 \ Accept an answer from the player
-: input-answer ( max-length -- length ; characters in PROMPT-ANSWER)
+: input-answer ( max-length -- length ; characters in PROMPT-ANSWER )
     MAX-ANSWER-LENGTH MIN \ Can't input more than buffer length
     BEGIN
       CR ." > "
@@ -309,7 +309,7 @@ ALIGN  \ Align to next slot boundary
         SWAP DROP \ Forget invalid answer
       THEN
       INVERT
-    UNTIL \ Try again if room was invalid
+    UNTIL \ Try again if room count was invalid
   ;
 
 \ Get room number arrow can't go back to
@@ -589,7 +589,7 @@ ALIGN  \ Align to next slot boundary
   ;
 
 \ Fly a crooked arrow
-: fly-arrow ( -- ; may set player state to WON or LOST)
+: fly-arrow ( -- ; may set player state to WON or LOST )
     HUNTER C@ \ arrow starts where player is
     DUP CR .
     ARROW-PATH-LENGTH C@ 0 DO
