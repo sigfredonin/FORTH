@@ -1,0 +1,6 @@
+\ See Hunt the Wumpus, by Gregory Yob,
+\ in Creative Computing, September/October 1975, pp 51-54
+\ at https://archive.org/details/CreativeComputingv01n05SeptemberOctober1975
+\ or The Best of Creative Computing, Volume 1 (1976), pp 247-250
+\ at http://www.atariarchives.org/bcc1/showpage.php?page=247
+
