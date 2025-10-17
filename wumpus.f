@@ -20,7 +20,7 @@
 [THEN] [THEN]
 
 include random.fs \ defines random ( n -- 0..n-1 )
-MS@ SEED !        \ Initialize random seed to a value that changes with time
+MS@ SEED !        \ Initialize random seed from a value that changes with time
 
 \
 \ The cave: 20 rooms, each connected to 3 others, as a dodecahedron
