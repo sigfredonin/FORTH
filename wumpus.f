@@ -1,9 +1,12 @@
 \ Hunt the Wumpus - FORTH - v 1.00
 \ See Hunt the Wumpus, by Gregory Yob,
 \ in Creative Computing, September/October 1975, pp 51-54
-\ at https://archive.org/details /CreativeComputingv01n05SeptemberOctober1975
+\ at https://archive.org/details/CreativeComputingv01n05SeptemberOctober1975
 \ or The Best of Creative Computing, Volume 1 (1976), pp 247-250
 \ at http://www.atariarchives.org/bcc1/showpage.php?page=247
+\ See also the Hunt the Wumpus discussion on Rosseta Code
+\ at https://rosettacode.org/wiki/Talk:Hunt_the_Wumpus
+\ for a list of game behaviors derived from the original BASIC code.
 
 : wumpus-version ( -- )
     ." Version 1.00 - FORTH "
