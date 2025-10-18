@@ -38,7 +38,7 @@ a deliberate departure, Yob says, from a prevalence of games on rectangular grid
 
 In the cave, you face several hazards: the Wumpus is asleep in one room;
 two others contain bottomless pits; and two more contain super bats.
-You starts the game into a room that does not have any of these hazards.
+You starts the game in a room that does not have any of these hazards.
 As you move through the cave, you can sense nearby dangers:
 
 * You can smell the Wumpus, if it is in an adjacent room.
@@ -81,6 +81,18 @@ of the language, such as local variables or object oriented features.
 It conforms to the ANSI X3.215-1994 standard, except that it uses
 a Forth word to access a system millisecond or microsecond clock,
 as a means of seeding the pseudorandom number generator.
+
+The Forth code departs from the original implementation in that the player
+is not allowed to make the second room in a crooked arrow's path be the room
+that the hunter is in.
+That would require the arrow to exit the first room in its path the way it came in, 
+assuming the first room can be reached from the hunter's room.
+That would exceed its crookedness capabilities.
+The original code did not check for this possibility.
+
+The Forth code also departs from the original in the wording of
+messages to the player, the wording of the game instructions,
+and the manner in which it treats invalid player inputs.
 
 The code has been tested on Gforth (version 0.7.0, November 2, 2008), and
 SwiftForth i386-Win32 3.12.0 21-Sep-2023, on Windows 11 (October 2025).
