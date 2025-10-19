@@ -27,6 +27,13 @@ https://rosettacode.org/wiki/Hunt_the_Wumpus
 The discussion page, https://rosettacode.org/wiki/Talk:Hunt_the_Wumpus,
 has a list of game behaviors extracted from the original BASIC.
 
+Hunt the Wumpus was described in the November 1973 issue of the
+People's Computer Company's newsletter, page 23.
+It was offered for sale on tape for $4.
+Scans of this issue are online at
+
+https://dn790009.ca.archive.org/0/items/1973-11-peoples-computer-company/1973-11%20Peoples%20Computer%20Company.pdf
+
 ### The Game
 
 Hunt the Wumpus is one of the text adventure games from the beginning of the
