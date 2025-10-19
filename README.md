@@ -76,9 +76,9 @@ or a new arrangement in which everything is probably in different rooms.
 
 This implementation is written in fairly elementary Forth.
 It does not, for example, make explicit use of the return stack,
-and it does not use any of the advanced features of the later versions
+and it does not use any of the advanced facilities of the later versions
 of the language, such as local variables or object oriented features.
-It conforms to the ANSI X3.215-1994 standard, except that it uses
+It conforms to the ANSI X3.215-1994 Forth standard, except that it uses
 a Forth word to access a system millisecond or microsecond clock,
 as a means of seeding the pseudorandom number generator.
 
@@ -95,7 +95,7 @@ messages to the player, the wording of the game instructions,
 and the manner in which it treats invalid player inputs.
 
 The code has been tested on Gforth (version 0.7.0, November 2, 2008), and
-SwiftForth i386-Win32 3.12.0 21-Sep-2023, on Windows 11 (October 2025).
+SwiftForth (i386-Win32 3.12.0 21-Sep-2023), on Windows 11 (October 2025).
 
 ## License (MIT License)
 
