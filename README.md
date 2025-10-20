@@ -36,9 +36,11 @@ if they sent in a request with a stamped self-addressed envelope.
 The programs were said to run on any system with Dartmouth BASIC,
 using HP strings.
 I think that meant string variables
-had a dollar sign in front, as in 
+were named with a dollar sign after a letter, as in 
 
-$A="This is a string."
+```basic
+A$="This is a string."
+```
 
 Scans of this issue are online at
 
