@@ -29,22 +29,32 @@ has a list of game behaviors extracted from the original BASIC.
 
 Hunt the Wumpus was described in the November 1973 issue of the
 People's Computer Company's newsletter, page 23.
-It was offered for sale to subscribers on tape
-(presumably an audio cassette) for $4.
-Subscribers could get a free printout of the source code,
-if they sent in a request with a stamped self-addressed envelope.
-The programs were said to run on any system with Dartmouth BASIC,
-using HP strings.
-I think that meant string variables
-were named with a dollar sign after a letter, as in 
-
-```basic
-A$="This is a string."
-```
-
 Scans of this issue are online at
 
 https://dn790009.ca.archive.org/0/items/1973-11-peoples-computer-company/1973-11%20Peoples%20Computer%20Company.pdf
+
+The magazine offered the program for sale to subscribers on tape
+(presumably an audio cassette) for $4.
+Subscribers could also get a free printout of the source code,
+if they sent in a request with a stamped self-addressed envelope.
+
+The programs were said to run on any system with Dartmouth BASIC,
+using HP strings.
+I think that meant strings worked as they did in HP Time-Shared BASIC
+on HP 2000 minicomputers:
+Variables were named with a dollar sign after a letter,
+could be declared to have a maximum length in a DIM statement,
+and substrings were accessed by array-like indexing
+with a name[left-index,right-index] notation,
+as in 
+
+```basic
+DIM A$[26]
+A$="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+```
+and `A$[1,3]` is the string `"ABC"`, `A$[20]` is `"TUVWXYZ"`.
+If your machine's BASIC worked differently,
+you might have to edit the source.
 
 ### The Game
 
