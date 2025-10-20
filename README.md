@@ -29,7 +29,17 @@ has a list of game behaviors extracted from the original BASIC.
 
 Hunt the Wumpus was described in the November 1973 issue of the
 People's Computer Company's newsletter, page 23.
-It was offered for sale on tape for $4.
+It was offered for sale to subscribers on tape
+(presumably an audio cassette) for $4.
+Subscribers could get a free printout of the source code,
+if they sent in a request with a stamped self-addressed envelope.
+The programs were said to run on any system with Dartmouth BASIC,
+using HP strings.
+I think that meant string variables
+had a dollar sign in front, as in 
+
+$A="This is a string."
+
 Scans of this issue are online at
 
 https://dn790009.ca.archive.org/0/items/1973-11-peoples-computer-company/1973-11%20Peoples%20Computer%20Company.pdf
