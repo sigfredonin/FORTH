@@ -107,9 +107,11 @@ This implementation is written in fairly elementary Forth.
 It does not, for example, make explicit use of the return stack,
 and it does not use any of the advanced facilities of the later versions
 of the language, such as local variables or object oriented features.
-It conforms to the ANSI X3.215-1994 Forth standard, except that it uses
-a Forth word to access a system millisecond or microsecond clock,
-as a means of seeding the pseudorandom number generator.
+It conforms to the ANSI X3.215-1994 Forth standard, except that
+it uses [DEFINED] from the proposed Forth Standard 2012.
+It has environmental dependencies: RANDOM, to generate a pseudorandom integer,
+and either UTIME or COUNTER to access a system millisecond or microsecond clock,
+as a means of setting the pseudorandom number generator SEED.
 
 The Forth code departs from the original implementation in that the player
 is not allowed to make the second room in a crooked arrow's path be the room
