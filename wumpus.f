@@ -97,8 +97,9 @@ CHAR w CONSTANT WHERE-AM-I?
 CHAR m CONSTANT MOVE-ME
 CHAR s CONSTANT SHOOT
 \ - undocumented -
-CHAR g CONSTANT GAME-STATE \ show the game state
-CHAR c CONSTANT CAVE-ROOMS \ show all the cave rooms
+CHAR g CONSTANT GAME-STATE     \ show the game state
+CHAR c CONSTANT CAVE-ROOMS     \ show all the cave rooms
+CHAR r CONSTANT SHUFFLED-ROOMS \ show shuffled room numbers
 
 ALIGN  \ Align to next slot boundary
 
@@ -174,11 +175,6 @@ ALIGN  \ Align to next slot boundary
     COUNT-ROOMS 0 DO I CHARS ROOM-NUMBERS + I 1+ SWAP C! LOOP
   ;
 
-\ Display the room numbers
-: show-room-numbers ( -- )
-    COUNT-ROOMS 0 DO I CHARS ROOM-NUMBERS + C@ . LOOP
-  ;
-
 \ Choose a room in i..19 (yes, it could be i)
 : choose-room-in-tail ( i -- r )
     DUP COUNT-ROOMS 1- SWAP -  \ max-index-within-tail
@@ -202,7 +198,6 @@ ALIGN  \ Align to next slot boundary
     reset-room-numbers
     0 DO
       I swap-random-in-tail
-      \ CR I . ." : " show-room-numbers
     LOOP
   ;
 
@@ -215,35 +210,6 @@ ALIGN  \ Align to next slot boundary
 \
 \ Player dialogue
 \
-
-\ Show the game state
-: show-game-state ( -- )
-    CR ." HUNTER: " HUNTER C@ .
-    CR ." WUMPUS: " WUMPUS C@ .
-    CR ." PITS:   " PITS   C@ . PITS CHAR+ C@ .
-    CR ." BATS:   " BATS   C@ . BATS CHAR+ C@ .
-    CR ." ARROWS: " ARROWS C@ .
-    CR ." PLAYER: " PLAYER C@
-    CASE
-      LOST    OF ." LOST "    ENDOF
-      IN-PLAY OF ." IN-PLAY " ENDOF
-      WON     OF ." WON "     ENDOF
-      DUP CR . ." unexpected PLAYER state "
-    ENDCASE
-  ;
-
-\ List the neighboring rooms
-: list-neighbors ( room-number -- )
-    cave-room-neighbors
-    . . .
-  ;
-
-\ Show a list of all the cave's rooms
-: show-cave-rooms ( -- )
-    COUNT-ROOMS 0 DO
-      I 1+ DUP CR . ." : " list-neighbors
-    LOOP
-  ;
 
 \ Accept an answer from the player
 : input-answer ( max-length -- length ; characters in PROMPT-ANSWER )
@@ -296,6 +262,70 @@ ALIGN  \ Align to next slot boundary
         SWAP DROP \ Forget invalid answer
       THEN
     UNTIL \ Try again if answer was invalid
+  ;
+
+\ Show the game state
+: show-game-state ( -- )
+    CR ." HUNTER: " HUNTER C@ .
+    CR ." WUMPUS: " WUMPUS C@ .
+    CR ." PITS:   " PITS   C@ . PITS CHAR+ C@ .
+    CR ." BATS:   " BATS   C@ . BATS CHAR+ C@ .
+    CR ." ARROWS: " ARROWS C@ .
+    CR ." PLAYER: " PLAYER C@
+    CASE
+      LOST    OF ." LOST "    ENDOF
+      IN-PLAY OF ." IN-PLAY " ENDOF
+      WON     OF ." WON "     ENDOF
+      DUP CR . ." unexpected PLAYER state "
+    ENDCASE
+  ;
+
+\ Display the room numbers
+: show-room-numbers ( -- )
+    CR COUNT-ROOMS 0 DO I CHARS ROOM-NUMBERS + C@ . LOOP
+  ;
+
+\ List the neighboring rooms
+: list-neighbors ( room-number -- )
+    cave-room-neighbors
+    . . .
+  ;
+
+\ Show a list of all the cave's rooms
+: show-cave-rooms ( -- )
+    COUNT-ROOMS 0 DO
+      I 1+ DUP CR . ." : " list-neighbors
+    LOOP
+  ;
+
+\ List any hazards in a room
+: hazards-in-room ( room-number -- )
+    DUP ?cave-room-has-wumpus IF
+     CR ." I smell a Wumpus!"
+    THEN
+    DUP ?cave-room-has-pit IF
+     CR ." I feel a draft!"
+    THEN
+    DUP ?cave-room-has-bats IF
+     CR ." I hear a rustling sound!"
+    THEN
+    DROP \ Forget room number
+  ;
+
+\ Warn of any hazards in the neighboring rooms
+: warn-of-hazards ( room-number -- )
+    cave-room-neighbors
+    hazards-in-room
+    hazards-in-room
+    hazards-in-room
+  ;
+
+\ Describe the Hunter's location
+: describe-hunter-location ( -- )
+    HUNTER C@
+    CR ." You are in room " DUP .
+    CR ." Tunnels lead to rooms " DUP list-neighbors
+    warn-of-hazards
   ;
 
 \ Show the stored crooked arrow path
@@ -369,16 +399,18 @@ ALIGN  \ Align to next slot boundary
   ;
 
 \ Prompt for a command
-: prompt-command ( -- MOVE-ME | SHOOT | WHERE-AM-I? )
+: prompt-command ( -- MOVE-ME | SHOOT | WHERE-AM-I? |
+                      GAME-STATE | CAVE-ROOMS | SHUFFLED-ROOMS )
     BEGIN
       CR ." What do you want to do "
          ." (m=move, s=shoot, w=where am I?)? "
       input-ascii-lowercase
-      DUP MOVE-ME = OVER SHOOT        = OR
-                    OVER WHERE-AM-I?  = OR
+      DUP MOVE-ME = OVER SHOOT            = OR
+                    OVER WHERE-AM-I?      = OR
                     \ - undocumented -
-                    OVER GAME-STATE   = OR 
-                    OVER CAVE-ROOMS   = OR
+                    OVER GAME-STATE       = OR 
+                    OVER CAVE-ROOMS       = OR
+                    OVER SHUFFLED-ROOMS   = OR
       DUP INVERT IF
         CR ." Huh? "
         SWAP DROP \ Forget invalid answer
@@ -521,36 +553,6 @@ ALIGN  \ Align to next slot boundary
 \ Game play
 \
 
-\ List any hazards in a room
-: hazards-in-room ( room-number -- )
-    DUP ?cave-room-has-wumpus IF
-     CR ." I smell a Wumpus!"
-    THEN
-    DUP ?cave-room-has-pit IF
-     CR ." I feel a draft!"
-    THEN
-    DUP ?cave-room-has-bats IF
-     CR ." I hear a rustling sound!"
-    THEN
-    DROP \ Forget room number
-  ;
-
-\ Warn of any hazards in the neighboring rooms
-: warn-of-hazards ( room-number -- )
-    cave-room-neighbors
-    hazards-in-room
-    hazards-in-room
-    hazards-in-room
-  ;
-
-\ Describe the Hunter's location
-: describe-hunter-location ( -- )
-    HUNTER C@
-    CR ." You are in room " DUP .
-    CR ." Tunnels lead to rooms " DUP list-neighbors
-    warn-of-hazards
-  ;
-
 \ The Wumpus eats the Hunter if in the same room
 : wumpus-ate-hunter? ( -- ; may set player state to LOST )
     HUNTER C@ ?cave-room-has-wumpus IF
@@ -683,14 +685,16 @@ ALIGN  \ Align to next slot boundary
 \ Play the game until won or lost
 : play ( -- WON | LOST )
     BEGIN PLAYER C@ IN-PLAY = WHILE
-      prompt-command  \ -- MOVE-ME | SHOOT | WHERE-AM-I?
+      prompt-command  \ -- MOVE-ME | SHOOT | WHERE-AM-I? |
+                      \    GAME-STATE | CAVE-ROOMS | SHUFFLED-ROOMS
       CASE
-        MOVE-ME      OF move-hunter              ENDOF
-        SHOOT        OF shoot-arrow              ENDOF
-        WHERE-AM-I?  OF describe-hunter-location ENDOF
+        MOVE-ME          OF move-hunter              ENDOF
+        SHOOT            OF shoot-arrow              ENDOF
+        WHERE-AM-I?      OF describe-hunter-location ENDOF
         \ - undocumented -
-        GAME-STATE   OF show-game-state          ENDOF
-        CAVE-ROOMS   OF show-cave-rooms          ENDOF
+        GAME-STATE       OF show-game-state          ENDOF
+        CAVE-ROOMS       OF show-cave-rooms          ENDOF
+        SHUFFLED-ROOMS   OF show-room-numbers        ENDOF
         CR . ." unexpected command."
       ENDCASE
     REPEAT
